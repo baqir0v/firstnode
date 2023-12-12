@@ -2,8 +2,10 @@ const express = require('express')
 
 const app = express()
 const PORT = 5500
+let counter = 9
+app.use(express.json())
 
-const arr = [
+let arr = [
     {
         "id": 2,
         "description": "Sweet and savory sauces relishes spreads and seasonings",
@@ -52,20 +54,36 @@ app.get("/", (req, res) => {
 app.delete("/", (req, res) => {
     res.send(' delete')
 })
-app.post("/", (req, res) => {
-    res.send(' post')
-})
+// app.post("/", (req, res) => {
+//     res.send(' post')
+// })
 app.put("/", (req, res) => {
     res.send('put')
-})
-app.get("*", (req, res) => {
-    res.send("errorrrrrrrrrrrr")
 })
 
 app.get("/:id",(req,res)=>{
     const {id} = req.params
     const item = arr.find((i)=> i.id === +id)
     res.send(item)
+})
+app.delete("/:id",(req,res)=>{
+    const {id} = req.params
+    arr = arr.filter((i)=>i.id !== +id)
+    res.send(arr)
+})
+app.post("/",(req,res)=>{
+    // const {id} = req.params
+    let newItem = {
+        "id":counter++,
+        "name":req.body.name,
+        "description":req.body.description
+    }
+    arr.push(newItem)
+    res.send(arr)
+})
+
+app.get("*", (req, res) => {
+    res.send("errorrrrrrrrrrrr")
 })
 
 app.listen(PORT, (err) => {
